@@ -1,0 +1,43 @@
+# .NET build artifacts
+bin/
+obj/
+
+# Visual Studio/VSCode/JetBrains Rider settings
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.ncrunchsolution
+*.localhistory
+**/.idea/
+**/.idea/*
+
+# Build outputs
+*.dll
+*.exe
+*.pdb
+*.dbmdl
+*.log
+*.cache
+*.xml
+*.TestResults/
+TestResults/
+
+# NuGet / Packaging
+*.nupkg
+*.nuspec
+packages/
+project.lock.json
+
+# VS Code files
+.vscode/
+
+# Docker
+*.log
+Dockerfile.*
+docker-compose.*.yml
+
+*.cache
+/OrderApp/.vs
+*.user
