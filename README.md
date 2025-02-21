@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository implements a **CLI** for selling and buying stock (wine/whisky), matching the user prompt. The app stores all historical orders and reprint them after each new command, updating statuses accordingly (i.e., "remaining:X" or "closed").
+This repository implements a **CLI** for selling and buying stock (wine/whisky), matching the user prompt. The app stores all historical orders and reprints them after each new command, updating statuses accordingly (i.e., "remaining:X" or "closed").
 
 I chose to implement the **Command Pattern** to handle the core domain operations (`Sell`, `Buy`). Each command class encapsulates the logic specific to that operation, making the code modular and easy to extend with new operations (e.g., future "transfer", "reserve").
 
