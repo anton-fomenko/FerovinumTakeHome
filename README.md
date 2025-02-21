@@ -98,11 +98,26 @@ I chose **.NET** for this solution because of the following advantages:
 - **List<Order>**: Chronological list of all orders (both Sell and Buy) for reprinting the entire history.
 - **Dictionary<string, Queue<Order>>**: For each SKU, we store Sell orders in a FIFO queue, ensuring earliest stock is used first.
 
+## Performance Considerations
+
+- **Memory Usage**: Currently, all orders remain in memory. This allows for fast processing, but we don't preserve data. In production we would need to add database, which will increase request latency, but will make the orders durable.
+- **Caching Strategy**: If the system needs quick lookups of order history, but only occasionally modifies data, caching could reduce read load. We could use write-through cache strategy to keep consistency between cache and database.
+- **Bottleneck Analysis**: Profiling can identify whether queue operations, memory allocations, or I/O are the limiting factors as throughput grows. Instrumentation with performance counters or logs helps find real-world bottlenecks.
+
+## Security Considerations
+
+- **Input Validation**: Presently, the CLI does minimal parsing (command type, SKU, quantity). In a real-world system or if exposed as an API, more robust validation and sanitization (e.g., preventing SQL injection or malicious inputs) would be necessary.
+- **Authentication/Authorization**: This app does not include user authentication. A production system would likely require authentication tokens or other credentials before processing commands. Access control lists (ACLs) or role-based permissions could ensure that only authorized clients can execute certain operations.
+- **Data Integrity & Auditing**:
+  - **Persistence**: Orders currently reside in memory. A production system should store them in a secure database with transaction-level integrity.
+  - **Audit**: We should log all commands with timestamps and userId so that each operation can be traced back to an authorized client.
+- **Transport Security**: If these commands were served over a network (e.g., a RESTful API), connections should be encrypted with TLS/SSL to protect data in transit.
+
 ## Future Extensions and Production Readiness
 
-To make this solution production-ready, I would:
+To make this solution production-ready, apart from previously mentioned performance/security considerations, I would:
 
-- **Introduce a Repository/Database Layer**: Instead of storing orders in an in-memory list/queue, implement a repository pattern that persists orders to a relational or NoSQL database. This ensures durability and fault tolerance.
+- **Introduce a Repository/Database Layer**: Instead of storing orders in an in-memory list/queue, I would implement a repository pattern that persists orders to a relational or NoSQL database. This ensures durability and fault tolerance.
 - **Handle Concurrency**: If multiple clients can run commands in parallel, we’d ensure proper isolation and consistency. In a database context, this might involve row-level locks or optimistic concurrency checks on the orders table.
 - **Expand Domain Logic**: Our command-based approach already supports easy additions. For instance:
   - A `TransferCommand` or `ReserveCommand` can be created without altering existing command classes.
